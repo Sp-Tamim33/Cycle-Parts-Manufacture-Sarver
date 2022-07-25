@@ -21,6 +21,14 @@ async function run() {
         const CycleProducts = client.db('cycledb').collection('cycleproducts');
         console.log("CycleDB Connected")
 
+        // get Cycle Products
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const cursor = CycleProducts.find(query);
+            const products = await cursor.toArray();
+            res.send(products)
+        })
+
 
 
 
@@ -40,5 +48,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`CycleParts Running on ${port}`)
+    console.log(`CycleParts Running`)
 })
