@@ -40,11 +40,20 @@ async function run() {
             res.send(product)
         })
 
-
+        // Collect All orders
         app.post('/orders', async (req, res) => {
             const body = req.body;
             const orders = await productsOrder.insertOne(body);
             res.send(orders)
+        })
+
+
+        //get order by email
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await productsOrder.find(query).toArray();
+            res.send(result)
         })
 
 
