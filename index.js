@@ -19,6 +19,7 @@ async function run() {
     try {
         await client.connect();
         const CycleProducts = client.db('cycledb').collection('cycleproducts');
+        const productsOrder = client.db('cycledb').collection('productsorder');
         console.log("CycleDB Connected")
 
         // get Cycle Products
@@ -35,6 +36,13 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const product = await CycleProducts.findOne(query);
             res.send(product)
+        })
+
+
+        app.post('/orders', async (req, res) => {
+            const body = req.body;
+            const orders = await productsOrder.insertOne(body);
+            res.send(orders)
         })
 
 
