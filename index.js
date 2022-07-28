@@ -100,6 +100,12 @@ async function run() {
             res.send({ result, token })
         })
 
+        // get all users
+        app.get('/users', async (req, res) => {
+            const user = await users.find().toArray();
+            res.send(user)
+        })
+
 
         // get user info 
         app.get('/users/:email', async (req, res) => {
