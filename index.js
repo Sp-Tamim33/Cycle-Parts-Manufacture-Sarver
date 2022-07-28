@@ -81,6 +81,15 @@ async function run() {
         })
 
 
+        // get user info 
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const result = await users.findOne(query);
+            res.send(result);
+        })
+
+
         // get riviews
         app.get('/reviews', async (req, res) => {
             const query = {};
