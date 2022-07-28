@@ -22,6 +22,7 @@ async function run() {
         const CycleProducts = client.db('cycledb').collection('cycleproducts');
         const productsOrder = client.db('cycledb').collection('productsorder');
         const users = client.db('cycledb').collection('users');
+        const rivews = client.db('cycledb').collection('reviews');
         console.log("CycleDB Connected")
 
         // get Cycle Products
@@ -71,6 +72,21 @@ async function run() {
             res.send({ result, token })
         })
 
+
+        // get riviews
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = rivews.find(query);
+            const review = await cursor.toArray();
+            res.send(review)
+        })
+
+        // send review
+        app.post('/reviews', async (req, res) => {
+            const newReview = req.body;
+            const result = await rivews.insertOne(newReview)
+            res.send(result)
+        })
 
 
 
