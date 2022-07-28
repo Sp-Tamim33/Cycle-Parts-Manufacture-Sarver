@@ -10,6 +10,20 @@ const port = 5000 || process.env.PORT;
 app.use(cors())
 app.use(express.json())
 
+function varifyJWT(req, res, next) {
+    const authorization = req.headers.authorization;
+    if (!authorization) {
+        return res.status(401).send({ message: "UnAuthorization Access" })
+    }
+    const token = authorization.split(' ')[1];
+    jwt.verify(token, process.env.TOKEN_SECRET, function (err, decoded) {
+        if (err) {
+            return res.status(403).send({ message: "Forbidden Access" })
+        }
+        req.decoded = decoded;
+        next()
+    });
+}
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ugwnw.mongodb.net/?retryWrites=true&w=majority`;
@@ -50,11 +64,17 @@ async function run() {
 
 
         //get order by email
-        app.get('/orders', async (req, res) => {
+        app.get('/orders', varifyJWT, async (req, res) => {
             const email = req.query.email;
-            const query = { email: email };
-            const result = await productsOrder.find(query).toArray();
-            res.send(result)
+            const decodedEmail = req.decoded.email;
+            if (email === decodedEmail) {
+                const query = { email: email };
+                const result = await productsOrder.find(query).toArray();
+                return res.send(result)
+            }
+            else {
+                return res.status(403).send({ message: "Forbidden Access" })
+            }
         })
 
         // delete order
