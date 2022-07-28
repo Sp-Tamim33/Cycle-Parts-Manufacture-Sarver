@@ -57,6 +57,14 @@ async function run() {
             res.send(result)
         })
 
+        // delete order
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsOrder.deleteOne(query);
+            res.send(result)
+        })
+
 
         // Create users
         app.put('/users/:email', async (req, res) => {
