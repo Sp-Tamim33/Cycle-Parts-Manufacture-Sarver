@@ -101,7 +101,7 @@ async function run() {
         })
 
         // get all users
-        app.get('/users', async (req, res) => {
+        app.get('/users', varifyJWT, async (req, res) => {
             const user = await users.find().toArray();
             res.send(user)
         })
@@ -129,6 +129,35 @@ async function run() {
             const newReview = req.body;
             const result = await rivews.insertOne(newReview)
             res.send(result)
+        })
+
+
+        // create admin
+        app.put('/users/admin/:email', varifyJWT, async (req, res) => {
+            const email = req.params.email;
+            const requester = req.decoded.email;
+            const requesterAccount = await users.findOne({ email: requester });
+            if (requesterAccount.role === 'admin') {
+                const filter = { email: email }
+                const updatedDoc = {
+                    $set: { role: 'admin' },
+                }
+                const result = await users.updateOne(filter, updatedDoc);
+                res.send(result)
+            }
+            else {
+                res.status(403).send({ message: 'Forbidden' })
+            }
+
+        })
+
+
+        // get admin 
+        app.get('/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await users.findOne({ email: email });
+            const isAdmin = user.role === 'admin';
+            res.send({ admin: isAdmin })
         })
 
 
