@@ -35,6 +35,7 @@ async function run() {
         await client.connect();
         const CycleProducts = client.db('cycledb').collection('cycleproducts');
         const productsOrder = client.db('cycledb').collection('productsorder');
+        const blogs = client.db('cycledb').collection('blogs');
         const users = client.db('cycledb').collection('users');
         const rivews = client.db('cycledb').collection('reviews');
         console.log("CycleDB Connected")
@@ -165,6 +166,13 @@ async function run() {
             const user = await users.findOne({ email: email });
             const isAdmin = user.role === 'admin';
             res.send({ admin: isAdmin })
+        })
+
+        // post a blog
+        app.post('/blogs', async (req, res) => {
+            const blog = req.body;
+            const result = await blogs.insertOne(blog);
+            res.send(result)
         })
 
 
