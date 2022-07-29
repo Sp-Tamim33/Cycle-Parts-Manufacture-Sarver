@@ -47,6 +47,13 @@ async function run() {
             res.send(products)
         })
 
+        // Post Cycle Products
+        app.post('/products', async (req, res) => {
+            const product = req.body;
+            const result = await CycleProducts.insertOne(product);
+            res.send(result);
+        })
+
         //get single product
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
