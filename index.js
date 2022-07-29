@@ -175,6 +175,12 @@ async function run() {
             res.send(result)
         })
 
+        // get a blog 
+        app.get('/blogs', async (req, res) => {
+            const result = await blogs.find().toArray();
+            res.send(result)
+        })
+
 
 
     } finally {
