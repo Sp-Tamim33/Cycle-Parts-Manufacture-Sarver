@@ -62,6 +62,12 @@ async function run() {
             const product = await CycleProducts.findOne(query);
             res.send(product)
         })
+        app.delete('/product/:id', varifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await CycleProducts.deleteOne(query);
+            res.send(result)
+        })
 
         // Collect All orders
         app.post('/orders', async (req, res) => {
